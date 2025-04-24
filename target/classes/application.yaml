@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/mp
+    url: jdbc:mysql://localhost:3306/mp?rewriteBatchedStatements=true   # 开启批量插入
     username: root
     password: 754301
 logging:
@@ -18,6 +18,9 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: auto
+      logic-delete-field: deleted  # 逻辑删除字段
+  configuration:
+    default-enum-type-handler: com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler  # 枚举类型处理器
 
 
 knife4j:

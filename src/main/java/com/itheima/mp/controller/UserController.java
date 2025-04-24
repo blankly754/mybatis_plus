@@ -1,6 +1,7 @@
 package com.itheima.mp.controller;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.itheima.mp.domain.dto.PageDTO;
 import com.itheima.mp.domain.dto.UserFormDTO;
 import com.itheima.mp.domain.po.User;
 import com.itheima.mp.domain.query.UserQuery;
@@ -41,31 +42,36 @@ public class UserController {
     @ApiOperation("根据id查询用户接口")
     @GetMapping("{id}")
     public UserVO queryUserById(@ApiParam("用户id") @PathVariable("id") Long id) {
-        User user = userService.getById(id);
 
-        return BeanUtil.copyProperties(user, UserVO.class);
+        return userService.queryUserAddressById(id);
     }
 
     @ApiOperation("根据id批量查询用户接口")
     @GetMapping
     public List<UserVO> queryUserById(@ApiParam("用户id集合") @RequestParam("ids") List<Long> ids) {
-        List<User> users = userService.listByIds(ids);
 
-        return BeanUtil.copyToList(users, UserVO.class);
+        return userService.queryUserAddressByIds(ids);
     }
 
     @ApiOperation("扣减用户余额接口")
     @PutMapping("/{id}/deduction/{money}")
     public void deductMoneyById(@ApiParam("用户id") @PathVariable("id") Long id,
                                 @ApiParam("用户id") @PathVariable("money") Integer money) {
-        userService.deductBalance(id,money);
+        userService.deductBalance(id, money);
     }
 
     @ApiOperation("根据复杂条件查询用户接口")
     @GetMapping("/list")
     public List<UserVO> queryUser(UserQuery query) {
-        List<User> users = userService.queryUsers(query.getName(),query.getStatus(),query.getMinBalance(),query.getMaxBalance());
+        List<User> users = userService.queryUsers(query.getName(), query.getStatus(), query.getMinBalance(), query.getMaxBalance());
 
         return BeanUtil.copyToList(users, UserVO.class);
+    }
+
+
+    @ApiOperation("根据条件分页查询用户接口")
+    @GetMapping("/pages")
+    public PageDTO<UserVO> queryUserPage(UserQuery query) {
+        return userService.queryUserPage(query);
     }
 }
